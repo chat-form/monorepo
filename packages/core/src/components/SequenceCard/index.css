@@ -1,0 +1,11 @@
+.cf-sc-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.cf-sc-card {
+  position: relative;
+  box-sizing: border-box;
+}

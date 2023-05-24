@@ -1,0 +1,9 @@
+node_modules
+dist
+docs-dist
+lib
+coverage
+*.log
+.DS_Store
+*.local
+vite.config.ts.timestamp-*
