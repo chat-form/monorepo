@@ -1,1 +1,1 @@
-export * from './components/SequenceCard'
+export * from "./components/SequenceCard";
