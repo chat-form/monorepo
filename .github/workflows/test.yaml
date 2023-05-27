@@ -28,12 +28,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: pnpm run intall
+      - name: pnpm run intall -f ${{ matrix.packages }}
         run: |
-          pnpm install
+          pnpm --filter "${{ matrix.packages }}..." install
       - name: build
         run: |
-          pnpm run build
+          pnpm --filter "${{ matrix.packages }}" build
       - name: test
         run: |
-          pnpm run test
+          pnpm --filter "${{ matrix.packages }}" test
