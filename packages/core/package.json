@@ -16,7 +16,7 @@
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "engines": {
-    "node": "14"
+    "node": ">=14"
   },
   "files": [
     "dist"

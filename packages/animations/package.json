@@ -14,7 +14,7 @@
   "author": "troy.lty <a@tianyi.li> (https://github.com/ttys026)",
   "type": "module",
   "engines": {
-    "node": "14"
+    "node": ">=14"
   },
   "license": "ISC",
   "devDependencies": {
