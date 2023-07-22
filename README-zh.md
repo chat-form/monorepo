@@ -1,20 +1,20 @@
 # Chat Form
 
-> A React component presenting complex forms in a conversational way. Simple, clear, separate user concerns, and reduce filling anxiety.
+> 使用对话的形式呈现复杂表单的 React 组件。简单、清晰、分离用户关注点、减少填写焦虑。
 
 [![core npm version](https://img.shields.io/npm/v/@chat-form/core.svg?label=core)](https://www.npmjs.com/package/@chat-form/core)
 [![animations npm version](https://img.shields.io/npm/v/@chat-form/animations.svg?label=animations)](https://www.npmjs.com/package/@chat-form/animations)
 [![Test](https://github.com/chat-form/monorepo/actions/workflows/test.yaml/badge.svg)](https://github.com/chat-form/monorepo/actions/workflows/test.yaml)
 
-[CodeSandBox Live Demo](https://codesandbox.io/s/sequencecard-demo-r3cxcm)
+[CodeSandBox 示例](https://codesandbox.io/s/sequencecard-demo-r3cxcm)
 
-### Install
+### 安装
 
 ```
 npm i --save @chat-form/core
 ```
 
-### Basic Usage
+### 基本用法
 
 ```jsx
 import { SequenceCard } from "@chat-form/core";
@@ -22,7 +22,7 @@ import { SequenceCard } from "@chat-form/core";
 export default () => <SequenceCard steps={steps} />;
 ```
 
-### Use Built-in Animations
+### 使用内置动画
 
 ```jsx
 import { SequenceCard } from "@chat-form/core";
@@ -31,4 +31,4 @@ import { slideIn } from "@chat-form/animations/slideIn";
 export default () => <SequenceCard steps={steps} animations={slideIn()} />;
 ```
 
-See more examples at [chat-form.io](/SequenceCard)
+更多例子请参考 [chat-form.io](/SequenceCard)

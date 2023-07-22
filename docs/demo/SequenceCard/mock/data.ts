@@ -347,3 +347,15 @@ export const ad = [
     "answers": []
   }
 ]
+
+export const defaultQuestion = [{
+  id: "0",
+  question: `New Question 0`,
+  answers: [
+    {
+      name: "yes",
+      key: "yes",
+      next: "",
+    },
+  ],
+}];
