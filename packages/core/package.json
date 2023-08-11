@@ -12,9 +12,9 @@
   },
   "keywords": [],
   "author": "troy.lty <a@tianyi.li> (https://github.com/ttys026)",
-  "type": "module",
   "types": "dist/index.d.ts",
-  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "main": "dist/index.cjs.js",
   "engines": {
     "node": ">=14"
   },
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "@mdx-js/react": "^2.3.0",
+    "@rollup/plugin-babel": "^6.0.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.1",
