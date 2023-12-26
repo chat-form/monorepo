@@ -1,6 +1,6 @@
 {
   "name": "@chat-form/core",
-  "version": "0.0.13",
+  "version": "1.0.0",
   "scripts": {
     "test": "jest",
     "prepublishOnly": "npm run build",
