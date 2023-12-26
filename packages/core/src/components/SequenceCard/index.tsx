@@ -17,7 +17,6 @@ import React, {
   useState,
 } from "react";
 import { unstable_batchedUpdates } from "react-dom";
-import { debounce } from "lodash-es";
 import "./index.css";
 
 const asyncNoop = () => Promise.resolve();
@@ -146,6 +145,7 @@ const _SequenceCard = forwardRef((props: Props, ref: ReactRef<Ref>) => {
   const afterExitCallback = useRef(asyncNoop);
   const navigateDirection = useRef<"forward" | "backward">("forward");
   const animationLock = useRef(Promise.resolve());
+  const stepLock = useRef(false);
 
   const getLastActiveStep = useMemoizedFn(() => {
     const aboutToExitIds = aboutToExit.map((ele) => ele.id);
@@ -251,74 +251,74 @@ const _SequenceCard = forwardRef((props: Props, ref: ReactRef<Ref>) => {
     }
   }, []);
 
-  const gotoStep = useMemoizedFn(
-    debounce(
-      async (id: string, delay = 0) => {
-        await new Promise((res) => setTimeout(res, delay));
-        await animationLock.current;
-        const targetIndex = allSteps.current.findIndex((ele) => ele.id === id);
-        const lastIndex = allSteps.current.findIndex(
-          (ele) => ele.id === steps[steps.length - 1]?.id
-        );
+  const gotoStep = useMemoizedFn(async (id: string, delay = 0) => {
+    if (stepLock.current) {
+      return;
+    }
+    stepLock.current = true;
+    try {
+      await new Promise((res) => setTimeout(res, delay));
+      await animationLock.current;
+      const targetIndex = allSteps.current.findIndex((ele) => ele.id === id);
+      const lastIndex = allSteps.current.findIndex(
+        (ele) => ele.id === steps[steps.length - 1]?.id
+      );
 
-        if (targetIndex !== -1 && targetIndex !== lastIndex) {
-          // move forward
-          if (targetIndex > lastIndex) {
-            navigateDirection.current = "forward";
-            await afterEnterCallback.current();
-            unstable_batchedUpdates(() => {
-              setAboutToEnter([allSteps.current[targetIndex]]);
-              setSteps((s) => {
-                const next = [...s, allSteps.current[targetIndex]];
-                return next;
-              });
-              onStepChange(id, allSteps.current);
+      if (targetIndex !== -1 && targetIndex !== lastIndex) {
+        // move forward
+        if (targetIndex > lastIndex) {
+          navigateDirection.current = "forward";
+          await afterEnterCallback.current();
+          unstable_batchedUpdates(() => {
+            setAboutToEnter([allSteps.current[targetIndex]]);
+            setSteps((s) => {
+              const next = [...s, allSteps.current[targetIndex]];
+              return next;
             });
-            afterEnterCallback.current = async () => {
-              afterEnterCallback.current = asyncNoop;
-              await new Promise<any>((res) => {
-                setAboutToEnter([], res);
-              });
-            };
-          } else {
-            // move backward
-            navigateDirection.current = "backward";
-            await afterExitCallback.current();
-            unstable_batchedUpdates(() => {
-              const nextAboutToExit = allSteps.current
-                .filter((_, index) => index > targetIndex)
-                .filter((ele) => steps.find((step) => step.id === ele.id));
-
-              setAboutToExit(nextAboutToExit);
+            onStepChange(id, allSteps.current);
+          });
+          afterEnterCallback.current = async () => {
+            afterEnterCallback.current = asyncNoop;
+            await new Promise<any>((res) => {
+              setAboutToEnter([], res);
             });
+          };
+        } else {
+          // move backward
+          navigateDirection.current = "backward";
+          await afterExitCallback.current();
+          unstable_batchedUpdates(() => {
+            const nextAboutToExit = allSteps.current
+              .filter((_, index) => index > targetIndex)
+              .filter((ele) => steps.find((step) => step.id === ele.id));
 
-            afterExitCallback.current = async () => {
-              afterExitCallback.current = asyncNoop;
-              return new Promise<any>((res) => {
-                unstable_batchedUpdates(() => {
-                  setSteps((s) => {
-                    const next = s.filter((_) => {
-                      const index = allSteps.current.findIndex(
-                        (e) => e.id === _.id
-                      );
-                      return index !== -1 && index <= targetIndex;
-                    });
-                    return next;
+            setAboutToExit(nextAboutToExit);
+          });
+
+          afterExitCallback.current = async () => {
+            afterExitCallback.current = asyncNoop;
+            return new Promise<any>((res) => {
+              unstable_batchedUpdates(() => {
+                setSteps((s) => {
+                  const next = s.filter((_) => {
+                    const index = allSteps.current.findIndex(
+                      (e) => e.id === _.id
+                    );
+                    return index !== -1 && index <= targetIndex;
                   });
-                  setAboutToExit([], res);
-                  onStepChange(id, allSteps.current);
+                  return next;
                 });
+                setAboutToExit([], res);
+                onStepChange(id, allSteps.current);
               });
-            };
-          }
+            });
+          };
         }
-      },
-      200,
-      {
-        leading: true,
       }
-    )
-  );
+    } finally {
+      stepLock.current = false;
+    }
+  });
 
   /** ensure bottom distance to fully display current step */
   const getContainerHeight = useMemoizedFn(() => {
